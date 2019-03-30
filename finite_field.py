@@ -32,18 +32,67 @@ class FieldElement:
         self.num = num
         self.prime = prime
 
+    # string representation
     def __repr__(self):
         return 'FieldElement_{}({})'.format(self.prime, self.num)
 
+    # '==' operator
     def __eq__(self, other):
         if other is None:
             return False
         return self.num == other.num and self.prime == other.prime
 
-    # Exercise 1
+    # CH1, Exercise 1: '=/=' operator
     def __ne__(self, other):
         # this should be the inverse of the == operator
         return not (self == other)
+
+    # '+' operator
+    def __add__(self, other):
+        if self.prime != other.prime:
+            raise TypeError('Cannot add two numbers in different Fields')
+        num = (self.num + other.num) % self.prime
+        return self.__class__(num, self.prime)
+
+    # CH1, Exercise 3: '-' operator
+    def __sub__(self, other):
+        if self.prime != other.prime:
+            raise TypeError('Cannot subtract two numbers in different Fields')
+        num = (self.num - other.num) % self.prime
+        # return an element of the same class
+        return self.__class__(num, self.prime)
+
+    # CH1, Exercise 6: '*' operator <-- NEED TO VERIFY THIS ANSWER
+    def __mul__(self, other):
+        if self.prime != other.prime:
+            raise TypeError('Cannot multiply two numbers in different Fields')
+        num = (self.num * other.num) % self.prime
+        return self.__class__(num, self.prime)
+
+    def __pow__(self, exponent):
+        '''
+        '(self.num ** exponent) % self.prime' is less efficient than the expression below, because with
+        'pow(self.num, exponent, self.prime)', the modulo function is done after each round of multiplication.
+
+        Naive implementation of negative exponents:
+        n = exponent
+        while n < 0:
+            n += self.prime - 1
+
+        Better implementation of negative exponents:
+        '''
+        n = exponent % (self.prime - 1)
+        num = pow(self.num, n, self.prime)
+        return self.__class__(num, self.prime)
+
+    # CH1, Exercise 9: '/' operator <-- NEED TO VERIFY THIS ANSWER
+    # why doesn't '__truediv__' work here?
+    def __div__(self, other):
+        if self.prime != other.prime:
+            raise TypeError('Cannot divide two numbers in different Fields')
+        num = (self.num * other.num**(self.prime-2)) % self.prime
+        return self.__class__(num, self.prime)
+
 
 # test
 a = FieldElement(7, 13)
