@@ -88,8 +88,22 @@ class FieldElement:
     # CH1, Exercise 9: '/' operator <-- NEED TO VERIFY THIS ANSWER
     # why doesn't '__truediv__' work here?
     def __div__(self, other):
+        '''
+        Here we make use of Fermat's Little Theorem:
+
+            n**(p-1) % p == 1.
+
+        Under finite field exponentiation, we have:
+
+            n**(p-1) == 1.
+
+        So,
+
+            a/n == a * n**(-1) == a * (n**(-1) * 1) == a * (n**(-1) * n**(p-1)) == a * n**(p-2).
+        '''
         if self.prime != other.prime:
             raise TypeError('Cannot divide two numbers in different Fields')
+        # Jimmy's implementation of this is a little different
         num = (self.num * other.num**(self.prime-2)) % self.prime
         return self.__class__(num, self.prime)
 
