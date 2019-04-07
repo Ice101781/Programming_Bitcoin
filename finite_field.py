@@ -89,7 +89,7 @@ class FieldElement:
     # why doesn't '__truediv__' work here?
     def __div__(self, other):
         '''
-        Here we make use of Fermat's Little Theorem:
+        Here we make use of 'Fermat's Little Theorem':
 
             n**(p-1) % p == 1.
 

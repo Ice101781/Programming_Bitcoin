@@ -232,6 +232,26 @@ CH1_Exercise_7([7,11,17,31])
      FieldElement_31(1), FieldElement_31(1), FieldElement_31(1), FieldElement_31(1), FieldElement_31(1), FieldElement_31(1)]
 
 
+  Proof of 'Fermat's Little Theorem':
+
+    In Exercise 5, we observed that the following two sets are equivalent:
+
+        {1, 2, 3, ..., p-2, p-1} == {(n % p), (2*n % p), (3*n % p), ..., ((p-2)*n % p), ((p-1)*n % p)}.
+
+    The resulting numbers might not be in the right order, but the same numbers are in both sets. We can then multiply every
+    element in both sets to get this equality:
+
+        (1 * 2 * 3 * ... * (p-2) * (p-1)) % p = (n * 2*n * 3*n * ... * (p-2)*n * (p-1)*n) % p.
+
+    Simplifying:
+
+        (p-1)! % p = ((p-1)! * n**(p-1)) % p, so
+
+        1 = n**(p-1) % p.
+
+    QED.
+
+
   CH1, Exercise 8:
 
     Solve the following equations in F_31:  <-- NEED TO VERIFY THESE ANSWERS
