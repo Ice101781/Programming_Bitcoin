@@ -95,9 +95,7 @@ class FieldElement:
 
         Under finite field exponentiation, we have:
 
-            n**(p-1) == 1.
-
-        So,
+            n**(p-1) == 1, so
 
             a/n == a * n**(-1) == a * (n**(-1) * 1) == a * (n**(-1) * n**(p-1)) == a * n**(p-2).
         '''
@@ -108,11 +106,14 @@ class FieldElement:
         return self.__class__(num, self.prime)
 
 
-# test
+'''
+TEST
+
 a = FieldElement(7, 13)
 b = FieldElement(6, 13)
 
 print(a == b)
-# False
+>>> False
 print(a == a)
-# True
+>>> True
+'''

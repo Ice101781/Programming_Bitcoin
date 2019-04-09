@@ -1,3 +1,5 @@
+from finite_field import FieldElement
+
 '''
 Elliptic curves have the following form:
 
@@ -153,6 +155,9 @@ class Point:
   def __repr__(self):
     if self.x is None:
       return 'Point(infinity)'
+    # point over a finite field
+    elif isinstance(self.x, FieldElement):
+      return 'Point({},{})_{}_{} FieldElement({})'.format(self.x.num, self.y.num, self.a.num, self.b.num, self.x.prime)
     else:
       return 'Point({},{})_{}_{}'.format(self.x, self.y, self.a, self.b)
 
@@ -204,17 +209,19 @@ class Point:
 
     CASE WHEN P1 == P2 && P1[1] = 0 (tangent and vertical line)
     '''
-    if self == other and self.y == 0:
+    if self == other and self.y == (0 * self.x): # instead of figuring out what 0 is for each type, we just use '0 * self.x'
       # return the point at infinity
       return self.__class__(None, None, self.a, self.b)
 
+'''
+CH 2, Example 1:
 
-# CH 2, Example 1:
-p1 = Point(-1, -1, 5, 7)
-# No error, point is on the curve
-## p2 = Point(-1, -2, 5, 7)  <-- SUPPRESSED SINCE IT RAISES AN ERROR
-# ValueError: (-1, -2) is not on the curve
+  ## p1 = Point(-1, -1, 5, 7)
+  >>> No error, point is on the curve
 
+  ## p2 = Point(-1, -2, 5, 7)
+  >>> ValueError: (-1, -2) is not on the curve
+'''
 
 '''
 CH 2, Exercise 1:
@@ -228,19 +235,21 @@ CH 2, Exercise 1:
     3) (18, 77)
 
     4) (5, 7)
-'''
+
 def CH2_Exercise_1(x, y):
 
   print(y**2 == x**3 + 5*x + 7)
 
 CH2_Exercise_1(2, 4)
-# False
+>>> False
 CH2_Exercise_1(-1, -1)
-# True
+>>> True
 CH2_Exercise_1(18, 77)
-# True
+>>> True
 CH2_Exercise_1(5, 7)
-# False
+>>> False
+'''
+
 '''
 CH2, Example 2:
 
@@ -251,50 +260,52 @@ CH2, Example 2:
     p2 = Point(-1, 1, 5, 7)
     inf = Point(None, None, 5, 7)
 
-    >>> print(p1 + inf)
-    Point(-1,-1)_5_7
+    print(p1 + inf)
+    >>> Point(-1,-1)_5_7
 
-    >>> print(inf + p2)
-    Point(-1,1)_5_7
+    print(inf + p2)
+    >>> Point(-1,1)_5_7
 
-    >>> print(p1 + p2)
-    Point(infinity)
+    print(p1 + p2)
+    >>> Point(infinity)
+'''
 
-
+'''
 CH2, Exercise 4:
 
   For the curve y**2 = x**3 + 5*x + 7, what is (2,5) + (-1,-1)?
-'''
+
 def CH2_Exercise_4(P1, P2):
 
-  '''
-  P1 + P2 = P3 == (x3, y3)
-  x3 = s**2 - x1 - x2
-  y3 = s*(x1 - x3) - y1
-  '''
+  # P1 + P2 = P3 == (x3, y3)
+  # x3 = s**2 - x1 - x2
+  # y3 = s*(x1 - x3) - y1
+
   s = (P2[1] - P1[1]) / (P2[0] - P1[0])
   x3 = s**2 - P1[0] - P2[0]
   y3 = s*(P1[0] - x3) - P1[1]
   print(x3, y3)
 
 CH2_Exercise_4((2,5), (-1,-1))
-# (3, -7)
+>>> (3, -7)
+'''
+
 '''
 CH2, Exercise 6:
 
   For the curve y**2 = x**3 + 5*x + 7, what is (-1,-1) + (-1,-1)?
-'''
+
 def CH2_Exercise_6(P1):
 
-  '''
-  P1 + P1 = P3 == (x3, y3)
-  x3 = s**2 - 2*x1
-  y3 = s*(x1 - x3) - y1
-  '''
+  # P1 + P1 = P3 == (x3, y3)
+  # x3 = s**2 - 2*x1
+  # y3 = s*(x1 - x3) - y1
+
   s = (3*P1[0]**2 + 5) / (2*P1[1])
   x3 = s**2 - 2*P1[0]
   y3 = s*(P1[0] - x3) - P1[1]
   print(x3, y3)
 
 CH2_Exercise_6((-1,-1))
-# (18, 77)
+>>> (18, 77)
+'''
